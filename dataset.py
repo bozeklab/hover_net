@@ -63,6 +63,30 @@ class __CPM17(__AbstractDataset):
 
 
 ####
+class __PanNuke(__AbstractDataset):
+    """Defines the PanNuke dataset as originally introduced in"""
+
+    # TODO: write paper reference
+
+    def load_img(self, path):
+        return cv2.cvtColor(cv2.imread(path), cv2.COLOR_BGR2RGB)
+
+    def load_ann(self, path, with_type=False):
+        # assumes that ann is HxW
+        ann_inst = sio.loadmat(path)["inst_map"]
+        if with_type:
+            ann_type = sio.loadmat(path)["type_map"]
+
+            ann = np.dstack([ann_inst, ann_type])
+            ann = ann.astype("int32")
+        else:
+            ann = np.expand_dims(ann_inst, -1)
+            ann = ann.astype("int32")
+
+        return ann
+
+
+####
 class __CoNSeP(__AbstractDataset):
     """Defines the CoNSeP dataset as originally introduced in:
 
@@ -102,6 +126,7 @@ def get_dataset(name):
         "kumar": lambda: __Kumar(),
         "cpm17": lambda: __CPM17(),
         "consep": lambda: __CoNSeP(),
+        "pannuke": lambda: __PanNuke(),
     }
     if name.lower() in name_dict:
         return name_dict[name]()
