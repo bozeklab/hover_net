@@ -140,6 +140,23 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
         )
         return f1_type
 
+    def _f1_acc_type(paired_true, paired_pred, type_id):
+        type_samples = (paired_true == type_id) | (paired_pred == type_id)
+
+        paired_true = paired_true[type_samples]
+        paired_pred = paired_pred[type_samples]
+
+        tp_dt = ((paired_true == type_id) & (paired_pred == type_id)).sum()
+        tn_dt = ((paired_true != type_id) & (paired_pred != type_id)).sum()
+        fp_dt = ((paired_true != type_id) & (paired_pred == type_id)).sum()
+        fn_dt = ((paired_true == type_id) & (paired_pred != type_id)).sum()
+
+        f1_type = (2 * tp_dt) / (2 * tp_dt + fp_dt + fn_dt)
+        acc_type = (tp_dt + tn_dt) / (tp_dt + tn_dt + fp_dt + fn_dt)
+
+        return (f1_type, acc_type)
+
+
     # overall
     # * quite meaningless for not exhaustive annotated dataset
     w = [1, 1]
@@ -162,16 +179,12 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
     if type_uid_list is None:
         type_uid_list = np.unique(true_inst_type_all).tolist()
 
-    results_list = [f1_d, acc_type]
+    results_list = [acc_type]
     for type_uid in type_uid_list:
-        f1_type = _f1_type(
+        f1_type = _f1_acc_type(
             paired_true_type,
             paired_pred_type,
-            unpaired_true_type,
-            unpaired_pred_type,
-            type_uid,
-            w,
-        )
+            type_uid)
         results_list.append(f1_type)
 
     np.set_printoptions(formatter={"float": "{: 0.5f}".format})
