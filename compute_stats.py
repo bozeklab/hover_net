@@ -172,14 +172,14 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
         fp_fn_dt -= ignore
 
     acc_type = tp_tn_dt / (tp_tn_dt + fp_fn_dt)
-    f1_d = 2 * tp_d / (2 * tp_d + w[0] * fp_d + w[1] * fn_d)
+    f1_d = 2 * tp_d / (2 * tp_d + fp_d + fn_d)
 
     w = [2, 2, 1, 1]
 
     if type_uid_list is None:
         type_uid_list = np.unique(true_inst_type_all).tolist()
 
-    results_list = [acc_type]
+    results_list = [acc_type, f1_d]
     for type_uid in type_uid_list:
         f1_type = _f1_acc_type(
             paired_true_type,
