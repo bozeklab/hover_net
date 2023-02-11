@@ -180,7 +180,7 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
     if type_uid_list is None:
         type_uid_list = np.unique(true_inst_type_all).tolist()
 
-    results_list = [(acc_type, f1_all)]
+    results_list = [(f1_all, acc_type)]
     for type_uid in type_uid_list:
         f1_type = _f1_acc_type(
             paired_true_type,
