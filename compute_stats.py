@@ -154,8 +154,10 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
 
         f1_type = (2 * tp_dt) / (2 * tp_dt + fp_dt + fn_dt)
         acc_type = (tp_dt + tn_dt) / (tp_dt + tn_dt + fp_dt + fn_dt)
+        prec_type = tp_dt / (tp_dt + fp_dt)
+        recall_type = tp_dt / (tp_dt + fn_dt)
 
-        return (f1_type, acc_type)
+        return (f1_type, acc_type, prec_type, recall_type)
 
 
     # overall
