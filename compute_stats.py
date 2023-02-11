@@ -173,7 +173,7 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
         fp_fn_dt -= ignore
 
     acc_type = tp_tn_dt / (tp_tn_dt + fp_fn_dt)
-    f1_all = f1_score(paired_pred_type, paired_true_type, zero_division=1)
+    f1_all = f1_score(paired_pred_type, paired_true_type, zero_division=1, average='weighted')
 
     w = [2, 2, 1, 1]
 
