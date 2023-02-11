@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 import pandas as pd
 import scipy.io as sio
+from sklearn.metrics import f1_score
 
 from metrics.stats_utils import (
     get_dice_1,
@@ -172,14 +173,14 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
         fp_fn_dt -= ignore
 
     acc_type = tp_tn_dt / (tp_tn_dt + fp_fn_dt)
-    f1_d = 2 * tp_d / (2 * tp_d + fp_d + fn_d)
+    f1_all = f1_score(paired_pred_type, paired_true_type, zero_division=1)
 
     w = [2, 2, 1, 1]
 
     if type_uid_list is None:
         type_uid_list = np.unique(true_inst_type_all).tolist()
 
-    results_list = [acc_type, f1_d]
+    results_list = [(acc_type, f1_all)]
     for type_uid in type_uid_list:
         f1_type = _f1_acc_type(
             paired_true_type,
