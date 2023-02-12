@@ -86,7 +86,7 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
             with open(os.path.join('consep_idx', f"{basename}.pkl"), 'wb') as outf:
                 pickle.dump(paired[:, 0], outf)
             with open(os.path.join('consep_idx', f"{basename}_cls.pkl"), 'wb') as outf:
-                pickle.dump(true_inst_type[paired[:, 0], outf])
+                pickle.dump(true_inst_type[paired[:, 0]], outf)
 
 
         # * Aggreate information
