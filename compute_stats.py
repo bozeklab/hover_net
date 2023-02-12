@@ -20,7 +20,7 @@ from metrics.stats_utils import (
     pair_coordinates
 )
 
-DUMP_PICKLE = True
+DUMP_PICKLE = False
 
 def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True):
     """GT must be exhaustively annotated for instance location (detection).
@@ -166,7 +166,7 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
         prec_type = tp_dt / (tp_dt + fp_dt)
         recall_type = tp_dt / (tp_dt + fn_dt)
 
-        return (f1_type, acc_type, prec_type, recall_type)
+        return (f1_type, acc_type)
 
 
     # overall
