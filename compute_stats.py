@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 import pandas as pd
 import scipy.io as sio
+import pickle
 from sklearn.metrics import f1_score
 
 from metrics.stats_utils import (
@@ -19,6 +20,7 @@ from metrics.stats_utils import (
     pair_coordinates
 )
 
+DUMP_PICKLE = True
 
 def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True):
     """GT must be exhaustively annotated for instance location (detection).
@@ -61,8 +63,8 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
             true_inst_type = np.array([0])
 
         # * for converting the GT type in CoNSeP
-        true_inst_type[(true_inst_type == 3) | (true_inst_type == 4)] = 3
-        true_inst_type[(true_inst_type == 5) | (true_inst_type == 6) | (true_inst_type == 7)] = 4
+        #true_inst_type[(true_inst_type == 3) | (true_inst_type == 4)] = 3
+        #true_inst_type[(true_inst_type == 5) | (true_inst_type == 6) | (true_inst_type == 7)] = 4
 
         pred_info = sio.loadmat(os.path.join(pred_dir, basename + ".mat"))
         # dont squeeze, may be 1 instance exist
@@ -79,6 +81,13 @@ def run_nuclei_type_stat(pred_dir, true_dir, type_uid_list=None, exhaustive=True
         paired, unpaired_true, unpaired_pred = pair_coordinates(
             true_centroid, pred_centroid, 12
         )
+
+        if DUMP_PICKLE:
+            with open(os.path.join('consep_idx', f"{basename}.pkl"), 'wb') as outf:
+                pickle.dump(paired[:, 0], outf)
+            with open(os.path.join('consep_idx', f"{basename}_cls.pkl"), 'wb') as outf:
+                pickle.dump(true_inst_type[paired[:, 0], outf])
+
 
         # * Aggreate information
         # get the offset as each index represent 1 independent instance
